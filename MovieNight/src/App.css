@@ -15,14 +15,48 @@ html, body {
   width: 100%;
   background-color: white;
   color: black;
-  padding: 1rem 1.5rem; 
   position: sticky;
   top: 0;
   z-index: 1000;
-  display: flex;
-  gap: 1.5rem;
+  display: grid;
+grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-between;
 }
 
+.nav-left {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.nav-center {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.nav-right {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.nav-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  width: 100%;
+  border-radius: 0.4rem;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.2s ease;
+}
+
+
+.nav-box:hover {
+  background: rgba(0, 0, 0, 0.1);   
+}
 
 .nav-link {
   text-decoration: none;
@@ -30,7 +64,7 @@ html, body {
 }
 
 .nav-link:hover {
-  text-decoration: underline;
+    color: #5c5050;
 }
 
 .nav-home {

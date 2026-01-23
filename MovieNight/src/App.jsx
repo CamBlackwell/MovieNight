@@ -3,7 +3,6 @@ import "./App.css";
 
 import Home from "./pages/Home";
 import Message from "./pages/Messages";
-import WeeklyAlert from "./pages/WeeklyAlert";
 import MovieHistory from "./pages/MovieHistory";
 import NotFound from "./pages/NotFound";
 
@@ -12,17 +11,23 @@ export default function App() {
     <Router>
       <div className="app-container">
         <nav className="nav-bar">
-          <Link to="/" className="nav-link nav-home">Home</Link>
-          <Link to="/messages" className="nav-link">Messages</Link>
-          <Link to="/alert" className="nav-link">Weekly Alert</Link>
-          <Link to="/history" className="nav-link">History</Link>
+          <div className="nav-left">
+            <Link to="/" className="nav-link nav-box">Home</Link>
+          </div>
+
+          <div className="nav-center">
+            <Link to="/messages" className="nav-link nav-box">Messages</Link>
+          </div>
+
+          <div className="nav-right">
+            <Link to="/history" className="nav-link nav-box">History</Link>
+          </div>
         </nav>
 
         <main className="page-content">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/messages" element={<Message />} />
-            <Route path="/alert" element={<WeeklyAlert />} />
             <Route path="/history" element={<MovieHistory />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
