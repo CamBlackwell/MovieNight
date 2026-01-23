@@ -92,3 +92,17 @@
 .movieAdd-searchItem:hover {
   background: #374151;
 }
+
+.movieAdd-deleteButton {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #b91c1c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.movieAdd-deleteButton:hover {
+  background: #dc2626;
+}
