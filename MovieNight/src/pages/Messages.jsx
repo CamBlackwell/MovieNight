@@ -1,10 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import "./Messages.css";
+import { supabase } from "../supabaseClient.js";
 
 export default function Message() {
-  const [messages, setMessages] = useState([
-    { id: 1, sender: "system", text: "Welcome to MovieNight!" }
-  ]);
+  const [messages, setMessages] = useState([]);
 
   const [inputText, setInputText] = useState("");
   const bottomRef = useRef(null);
@@ -13,17 +12,60 @@ export default function Message() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  function sendMessage() {
+  async function sendMessage() {
     if (!inputText.trim()) return;
 
     const newMessage = {
-      id: Date.now(),
-      sender: "user",
-      text: inputText.trim()
+      sender: "User",
+      text: inputText.trim(),
     };
 
-    setMessages([...messages, newMessage]);
+    const { data, error } = await supabase
+      .from("messages")
+      .insert(newMessage)
+      .select()
+
+    if (error) {
+      console.error("Error sending message:", error);
+      return;
+    }
+
+    setMessages(prev => [...prev, data[0]]);
     setInputText("");
+  }
+
+  useEffect(() => {
+    loadMessages();
+  }, []);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("public:messages")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "messages" },
+        (payload) => {
+          setMessages((prev) => [...prev, payload.new]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  async function loadMessages() {
+    const { data, error } = await supabase
+      .from("messages")
+      .select("*")
+      .order("created_at", { ascending: true });
+      
+    if (error) {
+      console.error("Error loading messages:", error);
+      return;
+    }
+    setMessages(data);
   }
 
   function handleKeyPress(e) {
