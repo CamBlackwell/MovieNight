@@ -1,0 +1,44 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #111827;
+  color: white;
+}
+
+.nav-bar {
+  width: 100%;
+  background-color: white;
+  color: black;
+  padding: 1rem 1.5rem; 
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  gap: 1.5rem;
+}
+
+
+.nav-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.nav-home {
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.page-content {
+  flex: 1;
+  padding: 1.5rem;
+}
