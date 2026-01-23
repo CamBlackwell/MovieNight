@@ -74,3 +74,21 @@
 .movieAdd-entryText {
   flex: 1;
 }
+
+.movieAdd-searchResults {
+  background: #1f2937;
+  margin-top: 0.5rem;
+  border-radius: 6px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.movieAdd-searchItem {
+  padding: 0.75rem;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+
+.movieAdd-searchItem:hover {
+  background: #374151;
+}
