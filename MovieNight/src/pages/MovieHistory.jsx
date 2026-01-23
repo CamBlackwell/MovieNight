@@ -26,7 +26,6 @@ export default function MovieHistory() {
       return;
     }
 
-    // multiple results
     setSearchResults(data.Search);
   }
 
@@ -37,8 +36,8 @@ export default function MovieHistory() {
     
     const data = await response.json();
     setMovieData(data);
-    setSearchResults([]);  // clear results
-    setSearchText(data.Title); // show selected title
+    setSearchResults([]);
+    setSearchText(data.Title);
   }
 
   function saveMovie() {
@@ -54,32 +53,36 @@ export default function MovieHistory() {
       watchedDate: selectedDate
     };
 
-    setSavedMovies([...savedMovies, newEntry]);
+    setSavedMovies(prev => [...prev, newEntry].sort((a, b) => new Date(b.watchedDate) - new Date(a.watchedDate)));
 
+    setSearchResults([]);
     setSearchText("");
     setMovieData(null);
     setChosenBy("");
     setSelectedDate("");
   }
 
+  function handleKeyPress(e) {
+    if (e.key === "Enter") lookupMovie();
+  }
+
   return (
     <div className="movieAdd-container">
       <h1 className="movieAdd-header">Add Watched Movie</h1>
 
-      {/* Search bar */}
       <div className="movieAdd-searchRow">
         <input
           className="movieAdd-input"
           placeholder="Search movie title..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={handleKeyPress}
         />
         <button className="movieAdd-button" onClick={lookupMovie}>
           Lookup
         </button>
       </div>
 
-      {/* Search results */}
       {searchResults.length > 0 && (
         <div className="movieAdd-searchResults">
           {searchResults.map((m) => (
@@ -94,7 +97,7 @@ export default function MovieHistory() {
         </div>
       )}
 
-      {/* Movie details */}
+
       {movieData && (
         <div className="movieAdd-details">
           {movieData.Poster && movieData.Poster !== "N/A" && (
@@ -130,7 +133,6 @@ export default function MovieHistory() {
         </div>
       )}
 
-      {/* Saved movies */}
       <h2 className="movieAdd-subheader">Saved Movies</h2>
       <div className="movieAdd-list">
         {savedMovies.map((movie) => (
