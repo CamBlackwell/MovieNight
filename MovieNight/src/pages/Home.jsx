@@ -13,7 +13,6 @@ export default function Home() {
   const [editingMemberId, setEditingMemberId] = useState(null);
   const [editingMemberName, setEditingMemberName] = useState("");
 
-  const [showWeekly, setShowWeekly] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
   const [showReorder, setShowReorder] = useState(false);
@@ -199,7 +198,7 @@ export default function Home() {
 
   return (
     <div className="home-container">
-      <h1 className="text-3xl font-bold mb-4">The chosen one for this week is...</h1>
+      <h1 className="intro-text">The chosen one for this week is...</h1>
 
       <div className="name-box">
         <h1 className="selected-name">
@@ -215,12 +214,6 @@ export default function Home() {
       </div>
 
       <div className="section-buttons">
-        <button
-          className={`section-toggle-button ${showWeekly ? "open" : ""}`}
-          onClick={() => setShowWeekly(prev => !prev)}
-        >
-          Weekly Picker
-        </button>
         <button
           className={`section-toggle-button ${showAdd ? "open" : ""}`}
           onClick={() => setShowAdd(prev => !prev)}
@@ -246,14 +239,6 @@ export default function Home() {
           Upcoming Calendar
         </button>
       </div>
-
-      {showWeekly && (
-        <div className="section-panel">
-          <h2 className="section-title">Weekly Picker</h2>
-          <p>This week: {currentPicker ? currentPicker.name : "No members yet"}</p>
-          <p>Next week: {nextPicker ? nextPicker.name : "No members yet"}</p>
-        </div>
-      )}
 
       {showAdd && (
         <div className="section-panel">
