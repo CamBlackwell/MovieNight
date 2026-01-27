@@ -4,6 +4,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import Message from "./pages/Messages";
 import MovieHistory from "./pages/MovieHistory";
+import Settings from "./pages/settings";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/messages" element={<Message />} />
             <Route path="/history" element={<MovieHistory />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
