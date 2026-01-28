@@ -1,4 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { AuthContext } from "./context/AuthContext";
+import AuthGate from "./pages/AuthGate";
+
 import "./App.css";
 
 import Home from "./pages/Home";
@@ -8,6 +12,20 @@ import Settings from "./pages/settings";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
+  const { activeUser, loading, createGuest, logout } = useContext(AuthContext);
+  const [authMode, setAuthMode] = useState("login");
+
+  if (loading) return null;
+
+  if (!activeUser)
+    return (
+      <AuthGate
+        mode={authMode}
+        switchMode={setAuthMode}
+        continueAsGuest={() => createGuest("Guest")}
+      />
+    );
+
   return (
     <Router>
       <div className="app-container">
@@ -22,6 +40,9 @@ export default function App() {
 
           <div className="nav-right">
             <Link to="/history" className="nav-link nav-box">History</Link>
+            <Link to="/settings" className="nav-link nav-box">Settings</Link>
+
+            <button className="logout-box" onClick={logout}>Logout</button>
           </div>
         </nav>
 

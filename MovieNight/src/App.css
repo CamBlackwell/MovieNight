@@ -53,6 +53,27 @@ grid-template-columns: 1fr 1fr 1fr;
   transition: background 0.2s ease;
 }
 
+.logout-box {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem 2rem;
+  width: 50%;
+
+  color: red;
+  text-decoration: none;
+  background: rgb(246, 243, 243);
+  transition: background 0.2s ease;
+}
+
+.logout-box:hover {
+  background: rgba(255, 0, 0, 0.1);
+}
+
+
 
 .nav-box:hover {
   background: rgba(0, 0, 0, 0.1);   
