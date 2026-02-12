@@ -7,16 +7,6 @@ export default function Home() {
   const [settings, setSettings] = useState(null);
   const [currentPicker, setCurrentPicker] = useState(null);
   const [nextPicker, setNextPicker] = useState(null);
-  const [calendarEntries, setCalendarEntries] = useState([]);
-
-  const [newMemberName, setNewMemberName] = useState("");
-  const [editingMemberId, setEditingMemberId] = useState(null);
-  const [editingMemberName, setEditingMemberName] = useState("");
-
-  const [showAdd, setShowAdd] = useState(false);
-  const [showMembers, setShowMembers] = useState(false);
-  const [showReorder, setShowReorder] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
 
   useEffect(() => {
     loadInitialData();
@@ -92,14 +82,12 @@ export default function Home() {
         weekStart,
         memberName: member.name,
       });
-    }
-    setCalendarEntries(entries);
+    }    setCalendarEntries(entries);
   }
 
   return (
     <div className="home-container">
       <h1 className="intro-text">The chosen one for this week is...</h1>
-
       <div className="name-box">
         <h1 className="selected-name">
           {currentPicker ? currentPicker.name : "No members yet"}

@@ -1,60 +1,85 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
-import { v4 as uuidv4 } from "uuid";
+
 
 export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
-  const [session, setSession] = useState(null);
-  const [profile, setProfile] = useState(null);
-  const [guest, setGuest] = useState(null);
+  const [activeUser, setActiveUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedGuest = localStorage.getItem("guest_profile");
-    if (storedGuest) setGuest(JSON.parse(storedGuest));
+    // Check for magic link callback
+    const params = new URLSearchParams(window.location.search);
+    const token_hash = params.get("token_hash");
+    const type = params.get("type");
 
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      if (data.session) loadProfile(data.session.user.id);
+    if (token_hash) {
+      supabase.auth.verifyOtp({
+        token_hash,
+        type: type || "email",
+      }).then(({ error }) => {
+        if (!error) {
+          // Clear URL params
+          window.history.replaceState({}, document.title, "/");
+        }
+      });
+    }
+
+    // Check for existing session
+    supabase.auth.getClaims().then(({ data: { claims } }) => {
+      if (claims) {
+        setActiveUser({ email: claims.email, id: claims.sub });
+      }
       setLoading(false);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session) loadProfile(session.user.id);
-      else setProfile(null);
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setActiveUser({ email: session.user.email, id: session.user.id });
+      } else {
+        setActiveUser(null);
+      }
     });
 
-    return () => listener.subscription.unsubscribe();
+    return () => subscription.unsubscribe();
   }, []);
 
-  async function loadProfile(id) {
-    const { data } = await supabase.from("profiles").select("*").eq("id", id).single();
-    setProfile(data);
-  }
+  const sendMagicLink = async (email) => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    });
+    setLoading(false);
+    return { error };
+  };
 
-  function createGuest(name = "Guest") {
-    const guestProfile = {
-      id: uuidv4(),
-      username: name,
-      avatar_url: null,
-      is_guest: true
-    };
-    localStorage.setItem("guest_profile", JSON.stringify(guestProfile));
-    setGuest(guestProfile);
-  }
+  const createGuest = async (name) => {
+    // Your existing guest logic
+    setActiveUser({ email: `${name}@guest.local`, id: "guest" });
+  };
 
-  function logout() {
-    localStorage.removeItem("guest_profile");
-    setGuest(null);
-    supabase.auth.signOut();
-  }
-
-  const activeUser = session ? profile : guest;
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setActiveUser(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ session, profile, guest, activeUser, loading, createGuest, logout }}>
+    <AuthContext.Provider
+      value={{
+        activeUser,
+        loading,
+        sendMagicLink,
+        createGuest,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
